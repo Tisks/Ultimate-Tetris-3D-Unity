@@ -2,17 +2,34 @@
 using System.Collections.Generic;
 using UnityEngine.SceneManagement;
 using UnityEngine;
+using SocketIO;
+using System.Threading;
+using System.Threading.Tasks;
 
 public class Movement : MonoBehaviour {
-	public float timestep = 0.2F; 
-	float time; 
+	public float timestep = 1F; 
+	float time;
+    private BGWebSocket APIREST;
+    private BGobjects.AttributePlayer attAux;
+    public float datito = 1; 
+	public float speed = 0.05F; 
+	public float dato = 0;
+
 
 	//The actual group which can rotate and will move down
 	public GameObject actualGroup; 
 
 	public void startGame(){
 		actualGroup = this.gameObject.GetComponent<GroupSpawner> ().spawnNext ();
+		BGWebSocket.instance.socket.On("Smessage",OnSmessag);
 	}
+	 private void OnSmessag(SocketIOEvent socketIOevent)
+    {
+        Debug.Log("ENTRA EN EL CUSTIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+        attAux = BGWebSocket.instance.JSONstrToAttribute(socketIOevent.data);
+        string data = attAux.Dato.ToString();
+        Debug.Log("EL DATO QUE LLEGO EeeeeeeeeeeeeeeeEESS: "+ data);
+    }
 	//Move down in interval of timestep
 	void Update () {
 		time += Time.deltaTime; 
@@ -47,7 +64,20 @@ public class Movement : MonoBehaviour {
 
 	//Speed increasement found at http://www.colinfahey.com/tetris/tetris.html 5.10 
 	public void setNewSpeed(){
-		timestep = ((10 - gameObject.GetComponent<Highscore> ().level) * 0.05F);
+		dato = BGWebSocket.instance.Datito;
+		if(dato != 0){
+			var cancellationTokenSource = new CancellationTokenSource();
+			var cancellationToken = cancellationTokenSource.Token;
+			speed = 0.25F;
+			dato = 0;
+			BGWebSocket.instance.Datito = 0;
+
+			Task.Delay(6000).ContinueWith(async (t) =>
+			{
+				speed = 0.05F;		
+			}, cancellationToken);     
+		}
+		timestep = ((10 - gameObject.GetComponent<Highscore> ().level) * speed);
 	}
 
 	void move(Vector3 pos){
