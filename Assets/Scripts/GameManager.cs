@@ -16,6 +16,10 @@ public class GameManager : MonoBehaviour {
 		window.SetActive (false); 
 		this.gameObject.GetComponent<Movement> ().startGame (); 
 	}
+	public void SpeedDown(){
+		this.gameObject.GetComponent<Movement> ().SpeedDown(); 
+	}
+
 
 	public void OnClickExit(){
 		Application.Quit (); 

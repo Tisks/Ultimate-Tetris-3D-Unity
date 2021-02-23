@@ -26,9 +26,6 @@ public class Movement : MonoBehaviour {
 	 private void OnSmessag(SocketIOEvent socketIOevent)
     {
         Debug.Log("ENTRA EN EL CUSTIOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
-        attAux = BGWebSocket.instance.JSONstrToAttribute(socketIOevent.data);
-        string data = attAux.Dato.ToString();
-        Debug.Log("EL DATO QUE LLEGO EeeeeeeeeeeeeeeeEESS: "+ data);
     }
 	//Move down in interval of timestep
 	void Update () {
@@ -61,6 +58,26 @@ public class Movement : MonoBehaviour {
 		gameObject.GetComponent<CubeArray> ().getCubePositionFromScene ();
 	}
 
+	public void SpeedDown(){
+		string videogameInfoString = BGWebSocket.instance.videogameInfo.ToString();	
+		Debug.Log("He apretado el boton de bajar la velocidad de caida de los ladrillos");	
+		Debug.Log(videogameInfoString);
+
+		JSONObject videogameJSONObject = new JSONObject(videogameInfoString);
+		Debug.Log("esta es la version JSONObject del videogameInfo");
+		Debug.Log(videogameJSONObject);
+
+		JSONObject json = new JSONObject();
+
+        json.AddField("room","SensorCerebral");
+        json.AddField("name","Juego_Pong");
+		json.AddField("message",videogameJSONObject);
+
+		Debug.Log("Al final se va a mandar esto");
+		Debug.Log(json);
+
+		BGWebSocket.instance.socket.Emit("message",json);
+	}
 
 	//Speed increasement found at http://www.colinfahey.com/tetris/tetris.html 5.10 
 	public void setNewSpeed(){
@@ -77,7 +94,7 @@ public class Movement : MonoBehaviour {
 				speed = 0.05F;		
 			}, cancellationToken);     
 		}
-		timestep = ((10 - gameObject.GetComponent<Highscore> ().level) * speed);
+		timestep = ((10 - gameObject.GetComponent<Highscore>().level) * speed);
 	}
 
 	void move(Vector3 pos){

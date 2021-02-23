@@ -11,7 +11,13 @@ public class BGWebSocket : MonoBehaviour
 {
     private const string API_URL = "http://localhost:8000/";
     public SocketIOComponent socket;
-    private float datito = 1;
+    private float datito = 0;
+    private float id_player = 0;
+    private float id_videogame = 1;
+    private float id_modifiable_mechanic = 1;
+    private float data = 1;
+
+    public Boomlagoon.JSON.JSONObject videogameInfo;
     AttributeResPlayer newPlayer;
     AttributePlayer attibute;
 
@@ -25,7 +31,11 @@ public class BGWebSocket : MonoBehaviour
         socket.On("AllSensors",OnAllSensors);
         socket.On("Smessage",OnSmessage);
         socket.On("Imessage",OnImessage);
-
+        videogameInfo = new  Boomlagoon.JSON.JSONObject();
+        videogameInfo.Add("id_videogame",id_videogame);
+        videogameInfo.Add("id_modifiable_mechanic",id_modifiable_mechanic);
+        videogameInfo.Add("data",data);  
+        Debug.Log(videogameInfo);
         StartCoroutine(ConnectToServer());
     }
 
@@ -59,11 +69,10 @@ public class BGWebSocket : MonoBehaviour
         var jj = socketIOevent.data;
         var json = Boomlagoon.JSON.JSONObject.Parse(data);
         Debug.Log("Entro al All SMessage: "+ data);
-        string dato = (json["message"]).ToString(); //GetNumber("data");
-        json = Boomlagoon.JSON.JSONObject.Parse(dato);
-        Debug.Log("Entro al All SMessage 2 obtiene data: "+ json["data"]);
-        json = Boomlagoon.JSON.JSONObject.Parse(dato);
-        Datito = (float)json.GetNumber("data");
+        Debug.Log("Esta es la version json: "+ json);
+        Debug.Log("Esta es el datito "+ (float)json.GetNumber("message"));
+
+        Datito = (float)json.GetNumber("message");
         
         Debug.Log("DateTime.Now.Millisecond TIEMPOOOOOO: "+(new TimeSpan(DateTime.Now.Ticks)).TotalMilliseconds);
     }
@@ -109,7 +118,7 @@ public class BGWebSocket : MonoBehaviour
         socket.Emit("AllSensors");*/
         //Debug.Log("ESTA COSA ESTA CONECTADA?"+socket.autoConnect);
         //Datito = UnityEngine.Random.Range(0.0f, 100.0f);
-        socket.Emit("AllSensors");
+        //socket.Emit("AllSensors");
     }
 
     
