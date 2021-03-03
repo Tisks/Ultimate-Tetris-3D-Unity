@@ -20,7 +20,6 @@ public class GameManager : MonoBehaviour {
 		this.gameObject.GetComponent<Movement> ().SpeedDown(); 
 	}
 
-
 	public void OnClickExit(){
 		Application.Quit (); 
 	}

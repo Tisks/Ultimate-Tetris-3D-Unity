@@ -28,6 +28,9 @@ public class CubeArray : MonoBehaviour {
 		}
 		return true; 
 	}
+	public void DestroyLine(){
+		
+	}
 
 
 	public void checkForFullLine(){

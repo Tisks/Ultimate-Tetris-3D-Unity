@@ -89,7 +89,7 @@ public class Movement : MonoBehaviour {
 			dato = 0;
 			BGWebSocket.instance.Datito = 0;
 
-			Task.Delay(6000).ContinueWith(async (t) =>
+			Task.Delay(10000).ContinueWith(async (t) =>
 			{
 				speed = 0.05F;		
 			}, cancellationToken);     
