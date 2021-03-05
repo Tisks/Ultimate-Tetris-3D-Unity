@@ -26,7 +26,11 @@ public class BGWebSocket : MonoBehaviour
     void Start()
     {
         GameObject go = GameObject.Find("SocketIO");
+        Debug.Log("30");
+        Debug.Log(go);
         socket = go.GetComponent<SocketIOComponent>();
+        Debug.Log("31");
+        Debug.Log(socket);
         //suscripción al web socket
         socket.On("AllSensors",OnAllSensors);
         socket.On("Smessage",OnSmessage);
@@ -41,11 +45,11 @@ public class BGWebSocket : MonoBehaviour
 
     IEnumerator ConnectToServer(){
         var json = new Boomlagoon.JSON.JSONObject();
-        json.Add("room","SensorCerebral");
-        json.Add("name","Juego_Pong");
+        json.Add("room","Ultimate-Tetris-3D-Unity");
+        json.Add("name","Ultimate-Tetris-3D-Unity");
         String data = json.ToString();
         yield return new WaitForSeconds(0.5f);
-        socket.Emit("join_sensor",new JSONObject(data));
+        socket.Emit("join_sensor_videogame",new JSONObject(data));
         yield return new WaitForSeconds(0.5f);
         Debug.Log("Se conecto BGWebSocket ?");
     }

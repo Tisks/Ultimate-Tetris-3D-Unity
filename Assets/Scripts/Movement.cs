@@ -69,8 +69,8 @@ public class Movement : MonoBehaviour {
 
 		JSONObject json = new JSONObject();
 
-        json.AddField("room","SensorCerebral");
-        json.AddField("name","Juego_Pong");
+        json.AddField("room","Ultimate-Tetris-3D-Unity");
+        json.AddField("name","Ultimate-Tetris-3D-Unity");
 		json.AddField("message",videogameJSONObject);
 
 		Debug.Log("Al final se va a mandar esto");
