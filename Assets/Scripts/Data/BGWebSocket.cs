@@ -12,16 +12,28 @@ public class BGWebSocket : MonoBehaviour
     private const string API_URL = "http://localhost:8000/";
     public SocketIOComponent socket;
     private float datito = 0;
+    
+    private float datito2 = 0;
     private float id_player = 0;
     private float id_videogame = 1;
     private float id_modifiable_mechanic = 1;
     private float data = 1;
 
+    
+    private float id_modifiable_mechanic2 = 7;
+
+    private float data2 = 1;
+
+
     public Boomlagoon.JSON.JSONObject videogameInfo;
+
+    public Boomlagoon.JSON.JSONObject videogameInfo2;
     AttributeResPlayer newPlayer;
     AttributePlayer attibute;
 
     public float Datito { get => datito; set => datito = value; }
+
+    public float Datito2 { get => datito2; set => datito2 = value; }
 
     void Start()
     {
@@ -40,6 +52,13 @@ public class BGWebSocket : MonoBehaviour
         videogameInfo.Add("id_modifiable_mechanic",id_modifiable_mechanic);
         videogameInfo.Add("data",data);  
         Debug.Log(videogameInfo);
+
+        videogameInfo2 = new  Boomlagoon.JSON.JSONObject();
+        videogameInfo2.Add("id_videogame",id_videogame);
+        videogameInfo2.Add("id_modifiable_mechanic",id_modifiable_mechanic2);
+        videogameInfo2.Add("data",data2);  
+        Debug.Log(videogameInfo2);
+
         StartCoroutine(ConnectToServer());
     }
 
@@ -74,10 +93,23 @@ public class BGWebSocket : MonoBehaviour
         var json = Boomlagoon.JSON.JSONObject.Parse(data);
         Debug.Log("Entro al All SMessage: "+ data);
         Debug.Log("Esta es la version json: "+ json);
-        Debug.Log("Esta es el datito "+ (float)json.GetNumber("message"));
+        Boomlagoon.JSON.JSONArray message_data = (Boomlagoon.JSON.JSONArray) json.GetArray("message");
+        Debug.Log(message_data);
+        Boomlagoon.JSON.JSONValue modified_mechanic = (Boomlagoon.JSON.JSONValue) message_data[1];
+        Boomlagoon.JSON.JSONValue currentData = (Boomlagoon.JSON.JSONValue) message_data[0];
 
-        Datito = (float)json.GetNumber("message");
-        
+        Debug.Log(modified_mechanic);
+        Debug.Log(currentData);
+
+        if((int) modified_mechanic.Number == 1){
+            Datito = (float) currentData.Number;
+
+        }
+        else{
+            Datito2 = (float) currentData.Number;
+
+        }
+
         Debug.Log("DateTime.Now.Millisecond TIEMPOOOOOO: "+(new TimeSpan(DateTime.Now.Ticks)).TotalMilliseconds);
     }
 

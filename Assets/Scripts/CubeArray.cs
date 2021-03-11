@@ -4,8 +4,19 @@ using UnityEngine;
 using System.Linq;
 using System;
 
+using SocketIO;
+using System.Threading;
+using System.Threading.Tasks;
+
 public class CubeArray : MonoBehaviour {
 	bool[,] isCube; 
+	
+    private BGWebSocket APIREST;
+    private BGobjects.AttributePlayer attAux;
+    public float datito = 1; 
+	public float dato = 0;
+
+	public bool powerActivated = false;
 
 	//Update the cube array and return false if there is any intersection between two cubes
 	public bool getCubePositionFromScene(){
@@ -29,7 +40,34 @@ public class CubeArray : MonoBehaviour {
 		return true; 
 	}
 	public void DestroyLine(){
-		
+		if(!powerActivated){
+
+			powerActivated = true;
+
+			string videogameInfoString = BGWebSocket.instance.videogameInfo2.ToString();	
+			Debug.Log("He apretado el boton de bajar la velocidad de caida de los ladrillos");	
+			Debug.Log(videogameInfoString);
+
+			JSONObject videogameJSONObject = new JSONObject(videogameInfoString);
+			Debug.Log("esta es la version JSONObject del videogameInfo");
+			Debug.Log(videogameJSONObject);
+
+			JSONObject json = new JSONObject();
+
+			json.AddField("room","Ultimate-Tetris-3D-Unity");
+			json.AddField("name","Ultimate-Tetris-3D-Unity");
+			json.AddField("message",videogameJSONObject);
+
+			Debug.Log("Al final se va a mandar esto");
+			Debug.Log(json);
+
+			BGWebSocket.instance.socket.Emit("message",json);
+
+		}
+	}
+	public int checkForDestroyLine(){
+        dato = BGWebSocket.instance.Datito2;
+		return (int) dato;
 	}
 
 
@@ -44,6 +82,13 @@ public class CubeArray : MonoBehaviour {
 			} 
 			if (isFull)
 				isFullLine.Add (i); 
+		}
+		int dato = checkForDestroyLine();
+		if(dato != 0){
+			isFullLine.Add(0);
+            dato = 0;
+            BGWebSocket.instance.Datito2 = 0;
+			powerActivated = false;
 		}
 
 		gameObject.GetComponent<Highscore>().addPointsForLines (isFullLine.Count); 

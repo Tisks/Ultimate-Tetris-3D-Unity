@@ -20,6 +20,10 @@ public class GameManager : MonoBehaviour {
 		this.gameObject.GetComponent<Movement> ().SpeedDown(); 
 	}
 
+	public void DestroyLine(){
+		this.gameObject.GetComponent<CubeArray> ().DestroyLine(); 
+	}
+
 	public void OnClickExit(){
 		Application.Quit (); 
 	}
